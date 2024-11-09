@@ -5,9 +5,10 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
+from datetime import datetime, timezone, timedelta
 import time
-from utils.logger import logger
 import os
+from utils.logger import logger
 
 def extract_data():
     logger.info("Extraindo dados do SteamDB.")
@@ -49,15 +50,42 @@ def extract_data():
         data = []
         for row in soup.select("table#DataTables_Table_0 tr.app"):
             columns = row.select("td")
-            if len(columns) > 4:
-                game_name = columns[2].get_text(strip=True)
+            if len(columns) > 7:
+                # Extrai apenas o texto do link <a>, que é o nome do jogo
+                game_name = columns[2].find("a").get_text(strip=True)
+                
                 discount_percent = columns[3].get_text(strip=True)
                 discount_price = columns[4].get_text(strip=True)
+                rating = columns[5].get_text(strip=True)  # Captura a coluna Rating
+                release_date = columns[6].get_text(strip=True)  # Captura a coluna Release
+
+                # Captura os valores `data-sort` e converte para data no horário do Brasil
+                ends_in_timestamp = columns[7].get("data-sort", None)
+                started_ago_timestamp = columns[8].get("data-sort", None)
+
+                # Converte timestamps para datetime com timezone UTC e ajusta para o horário do Brasil (UTC-3)
+                ends_in = (
+                    datetime.fromtimestamp(int(ends_in_timestamp), tz=timezone.utc).astimezone(timezone(timedelta(hours=-3))).strftime('%Y-%m-%d %H:%M:%S')
+                    if ends_in_timestamp else ""
+                )
+                started_ago = (
+                    datetime.fromtimestamp(int(started_ago_timestamp), tz=timezone.utc).astimezone(timezone(timedelta(hours=-3))).strftime('%Y-%m-%d %H:%M:%S')
+                    if started_ago_timestamp else ""
+                )
                 
+                # Extraindo informações adicionais como tags extras
+                extra_info_tags = columns[2].select("div.subinfo span")
+                extra_info = [tag.get_text(strip=True) for tag in extra_info_tags]
+
                 game_data = {
                     "game_name": game_name,
                     "discount_percent": discount_percent,
                     "discount_price": discount_price,
+                    "rating": rating,
+                    "release_date": release_date,
+                    "ends_in": ends_in,
+                    "started_ago": started_ago,
+                    "extra_info": extra_info,
                     "scraped_at": time.strftime("%Y-%m-%d %H:%M:%S")
                 }
                 data.append(game_data)

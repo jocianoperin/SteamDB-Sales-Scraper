@@ -1,4 +1,5 @@
 import json
+import os
 from utils.logger import logger
 from extract import extract_data
 from transform import transform_data
@@ -6,18 +7,29 @@ from transform import transform_data
 def main():
     logger.info("Iniciando o pipeline de dados SteamDB Sales Scraper.")
     
+    # Cria a pasta 'data' dentro de 'src' se não existir
+    data_dir = "data"
+    os.makedirs(data_dir, exist_ok=True)
+
     try:
         logger.debug("Iniciando a extração dos dados.")
         data = extract_data()
         
         if data:
-            # Salva os dados extraídos em um arquivo JSON para análise
-            with open("extracted_data.json", "w", encoding="utf-8") as f:
+            # Salva os dados extraídos em data/extracted_data.json
+            extracted_path = os.path.join(data_dir, "extracted_data.json")
+            with open(extracted_path, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=4)
-            logger.info("Dados extraídos salvos em extracted_data.json.")
+            logger.info("Dados extraídos salvos em data/extracted_data.json.")
 
             logger.debug("Transformando os dados extraídos.")
             transformed_data = transform_data(data)
+
+            # Salva os dados transformados em data/transformed_data.json
+            transformed_path = os.path.join(data_dir, "transformed_data.json")
+            with open(transformed_path, "w", encoding="utf-8") as f:
+                json.dump(transformed_data, f, ensure_ascii=False, indent=4)
+            logger.info("Dados transformados salvos em data/transformed_data.json.")
 
             logger.debug("Carregando os dados no BigQuery.")
             # Aqui chamaremos a função de carga no BigQuery
