@@ -3,3 +3,5 @@ beautifulsoup4
 google-cloud-bigquery
 PyYAML
 python-dotenv
+gspread
+google-api-python-client

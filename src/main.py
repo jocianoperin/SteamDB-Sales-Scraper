@@ -3,7 +3,8 @@ import os
 from utils.logger import logger
 from extract import extract_data
 from transform import transform_data
-from load import load_data_to_bigquery  # Importa a função de carga para o BigQuery
+from load import load_data_to_bigquery
+from export import export_data_to_google_sheets
 from dotenv import load_dotenv
 
 def main():
@@ -44,6 +45,15 @@ def main():
             logger.debug("Carregando os dados no BigQuery.")
             load_data_to_bigquery(transformed_data, dataset_id, table_id)
             logger.info("Dados carregados com sucesso no BigQuery.")
+
+            # Parâmetros do Google Sheets
+            spreadsheet_id = os.getenv("SHEET_ID")  # Adicione o ID da planilha no .env
+            range_name = os.getenv("SHEET_RANGE")  # Nome da aba e intervalo de destino no Google Sheets
+
+            # Chama a função de exportação para o Google Sheets
+            logger.debug("Exportando os dados para o Google Sheets.")
+            export_data_to_google_sheets(transformed_data, spreadsheet_id, range_name)
+            logger.info("Dados exportados com sucesso para o Google Sheets.")
 
             logger.info("Pipeline concluído com sucesso.")
         else:
