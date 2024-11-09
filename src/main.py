@@ -3,9 +3,13 @@ import os
 from utils.logger import logger
 from extract import extract_data
 from transform import transform_data
-from google.cloud import bigquery
+from load import load_data_to_bigquery  # Importa a função de carga para o BigQuery
+from dotenv import load_dotenv
 
 def main():
+    # Carrega variáveis de ambiente do arquivo .env
+    load_dotenv()
+    
     logger.info("Iniciando o pipeline de dados SteamDB Sales Scraper.")
     
     # Cria a pasta 'data' dentro de 'src' se não existir
@@ -32,9 +36,14 @@ def main():
                 json.dump(transformed_data, f, ensure_ascii=False, indent=4)
             logger.info("Dados transformados salvos em data/transformed_data.json.")
 
+            # Obtém `dataset_id` e `table_id` do .env
+            dataset_id = os.getenv("DATASET_ID")
+            table_id = os.getenv("TABLE_ID")
+
+            # Carrega os dados transformados no BigQuery
             logger.debug("Carregando os dados no BigQuery.")
-            # Aqui chamaremos a função de carga no BigQuery
-            # load_data(transformed_data)
+            load_data_to_bigquery(transformed_data, dataset_id, table_id)
+            logger.info("Dados carregados com sucesso no BigQuery.")
 
             logger.info("Pipeline concluído com sucesso.")
         else:

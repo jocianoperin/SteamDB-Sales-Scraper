@@ -36,15 +36,15 @@ def transform_data(data):
 
             # Estrutura os dados transformados
             transformed_entry = {
-                "game_name": game_name,
-                "discount_price": discount_price,
-                "discount_percent": discount_percent,
-                "scraped_at": entry["scraped_at"],
-                "extra_info": entry["extra_info"],
-                "rating": rating_stars,
-                "release_date": entry["release_date"],
-                "ends_in": entry["ends_in"],
-                "started_ago": entry["started_ago"]
+                "sale_game_name": game_name,
+                "sale_discount_price": discount_price,
+                "sale_discount_percent": discount_percent,
+                "sale_scraped_at": entry["scraped_at"],
+                "sale_extra_info": entry["extra_info"],
+                "sale_rating": rating_stars,
+                "sale_release_date": entry["release_date"],
+                "sale_ends_in": entry["ends_in"],
+                "sale_started_ago": entry["started_ago"]
             }
             transformed_data.append(transformed_entry)
         except ValueError as e:
