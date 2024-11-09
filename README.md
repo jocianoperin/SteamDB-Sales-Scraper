@@ -87,17 +87,13 @@ O pipeline realiza as seguintes etapas:
 - **Exportação para o Google Sheets**: Exporta os dados carregados no BigQuery para uma planilha do Google Sheets.
 
 
-### Dependências
+### Contribuição
 
-As dependências do projeto estão listadas no arquivo requirements.txt. Elas podem ser instaladas com o seguinte comando:
+Sinta-se à vontade para contribuir com este projeto, seja reportando problemas, sugerindo melhorias ou enviando pull requests.
 
-````bash
-pip install -r requirements.txt
-```
+### Contribuições Futuras
 
+Aqui estão algumas ideias de melhorias para versões futuras:
 
-
-
-
-
-
+- **Ler todos os dados da planilha**: Atualmente, o projeto lê apenas a primeira página da tabela no Google Sheets. Uma melhoria seria permitir a leitura de todas as páginas disponíveis.
+- **Sincronizar em tempo real**: Implementar uma sincronização contínua, onde o pipeline rode automaticamente em intervalos regulares, mantendo os dados sempre atualizados.
