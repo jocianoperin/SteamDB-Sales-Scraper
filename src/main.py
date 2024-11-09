@@ -3,6 +3,7 @@ import os
 from utils.logger import logger
 from extract import extract_data
 from transform import transform_data
+from google.cloud import bigquery
 
 def main():
     logger.info("Iniciando o pipeline de dados SteamDB Sales Scraper.")
