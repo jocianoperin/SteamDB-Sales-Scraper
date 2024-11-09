@@ -47,8 +47,8 @@ def main():
             logger.info("Dados carregados com sucesso no BigQuery.")
 
             # Parâmetros do Google Sheets
-            spreadsheet_id = os.getenv("SHEET_ID")  # Adicione o ID da planilha no .env
-            range_name = os.getenv("SHEET_RANGE")  # Nome da aba e intervalo de destino no Google Sheets
+            spreadsheet_id = os.getenv("SHEET_ID") 
+            range_name = os.getenv("SHEET_RANGE") 
 
             # Chama a função de exportação para o Google Sheets
             logger.debug("Exportando os dados para o Google Sheets.")

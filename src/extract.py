@@ -9,13 +9,17 @@ from datetime import datetime, timezone, timedelta
 import time
 import os
 from utils.logger import logger
+from dotenv import load_dotenv
+
+# Carrega o arquivo .env
+load_dotenv()
+
+# Obtém o caminho do ChromeDriver a partir do .env
+chromedriver_path = os.getenv("CHROMEDRIVER_PATH")
+os.chmod(chromedriver_path, 0o755)
 
 def extract_data():
     logger.info("Extraindo dados do SteamDB.")
-
-    # Definindo o caminho do ChromeDriver
-    chromedriver_path = "/home/jociano/Downloads/chromedriver-linux64/chromedriver"
-    os.chmod(chromedriver_path, 0o755)  # Garante permissão de execução
 
     # Configurando o Chrome com Selenium
     chrome_options = Options()

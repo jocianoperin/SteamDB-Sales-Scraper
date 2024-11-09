@@ -16,7 +16,7 @@ client = bigquery.Client(credentials=credentials, project=credentials.project_id
 
 # Função para carregar dados para o BigQuery
 def load_data_to_bigquery(data, dataset_id, table_id):
-    table_ref = f"{dataset_id}.{table_id}"  # Definindo o ID completo da tabela
+    table_ref = f"{dataset_id}.{table_id}" 
     job_config = bigquery.LoadJobConfig(
         schema=[
             bigquery.SchemaField("sale_game_name", "STRING", mode="REQUIRED"),
