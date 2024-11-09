@@ -25,7 +25,7 @@ Este projeto é um scraper de dados de promoções de jogos da Steam, utilizando
 Clone o repositório para o seu ambiente local:
 
 ```bash
-git clone https://github.com/seu_usuario/steamdb-sales-scraper.git
+git clone https://github.com/jocianoperin/steamdb-sales-scraper.git
 cd steamdb-sales-scraper
 ```
 
