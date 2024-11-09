@@ -27,3 +27,77 @@ Clone o repositório para o seu ambiente local:
 ```bash
 git clone https://github.com/seu_usuario/steamdb-sales-scraper.git
 cd steamdb-sales-scraper
+```
+
+### 2. Configuração do Ambiente Virtual
+
+Crie um ambiente virtual para isolar as dependências do projeto:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate  # No Windows use .venv\Scripts\activate
+```
+
+### 3. Instalação de Dependências
+
+Instale as dependências necessárias com o pip:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Configuração das Credenciais do Google
+
+Para interagir com o Google BigQuery e o Google Sheets, você precisará configurar credenciais de autenticação.
+
+- Crie um projeto no Google Cloud Console.
+- Ative as APIs do BigQuery e do Google Sheets para o seu projeto.
+- Crie uma chave de autenticação do serviço (arquivo JSON) e faça o download.
+- Salve o arquivo JSON da chave em um diretório de sua escolha e adicione o caminho no arquivo .env na variável GOOGLE_APPLICATION_CREDENTIALS.
+
+### 5. Configuração do Arquivo .env
+
+Crie um arquivo .env na raiz do projeto com as seguintes variáveis de ambiente:
+
+```bash
+# Caminho para o arquivo JSON de credenciais do Google
+GOOGLE_APPLICATION_CREDENTIALS=/caminho/para/seu/arquivo-de-credenciais.json
+
+# ID do dataset e da tabela no BigQuery
+DATASET_ID=steamdb_sales_scraper
+TABLE_ID=steamdb_sales_data.sales
+
+# ID da planilha no Google Sheets e o nome da faixa
+SPREADSHEET_ID=seu_id_da_planilha
+SHEET_RANGE=sua_faixa_da_planilha
+```
+
+### 6. Rodando o Scraper
+
+Com as configurações acima concluídas, execute o pipeline para iniciar a extração, transformação e carregamento dos dados:
+
+```bash
+python src/main.py
+```
+O pipeline realiza as seguintes etapas:
+
+- **Extração**: Coleta os dados da página do SteamDB.
+- **Transformação**: Limpa e estrutura os dados para o BigQuery e Google Sheets.
+- **Carregamento no BigQuery**: Carrega os dados transformados no Google BigQuery.
+- **Exportação para o Google Sheets**: Exporta os dados carregados no BigQuery para uma planilha do Google Sheets.
+
+
+### Dependências
+
+As dependências do projeto estão listadas no arquivo requirements.txt. Elas podem ser instaladas com o seguinte comando:
+
+````bash
+pip install -r requirements.txt
+```
+
+
+
+
+
+
+
