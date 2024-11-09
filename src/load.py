@@ -42,7 +42,7 @@ def load_data_to_bigquery(data, dataset_id, table_id):
         logger.info(f"Carregamento concluído: {len(data)} registros adicionados à tabela {table_id}.")
     except Exception as e:
         logger.error(f"Erro ao carregar dados para o BigQuery: {e}")
-
+"""
 # Exemplo de dados para carregar
 data = [
     {
@@ -61,3 +61,4 @@ data = [
 
 # Chama a função para carregar os dados
 load_data_to_bigquery(data, os.getenv("DATASET_ID"), os.getenv("TABLE_ID"))
+"""

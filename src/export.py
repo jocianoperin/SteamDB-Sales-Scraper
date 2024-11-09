@@ -29,38 +29,42 @@ def export_data_to_google_sheets(data, spreadsheet_id, range_name):
         if isinstance(entry.get("sale_started_ago"), datetime):
             entry["sale_started_ago"] = entry["sale_started_ago"].strftime('%Y-%m-%d %H:%M:%S')
 
-    # Prepara os dados para o Google Sheets
-    values = [
-        ["sale_game_name", "sale_discount_price", "sale_discount_percent", "sale_scraped_at",
-         "sale_extra_info", "sale_rating", "sale_release_date", "sale_ends_in", "sale_started_ago"]
-    ] + [
-        [
-            entry["sale_game_name"],
-            entry["sale_discount_price"],
-            entry["sale_discount_percent"],
-            entry["sale_scraped_at"],
-            ", ".join(entry["sale_extra_info"]),
-            entry["sale_rating"],
-            entry["sale_release_date"],
-            entry["sale_ends_in"],
-            entry["sale_started_ago"]
-        ]
-        for entry in data
-    ]
+    # Carregar os dados existentes na planilha para verificar duplicações
+    sheet = service.spreadsheets()
+    result = sheet.values().get(spreadsheetId=spreadsheet_id, range=range_name).execute()
+    existing_data = result.get('values', [])
 
-    # Log de início de exportação
-    logger.info("Exportando os dados para o Google Sheets.")
+    # Lista para armazenar os dados que ainda não existem na planilha
+    new_data = []
+    for entry in data:
+        game_name = entry["sale_game_name"]
+        exists = any(existing_entry[0] == game_name for existing_entry in existing_data)
+        if not exists:
+            # Se o jogo não existe na planilha, adiciona à lista de novos dados
+            new_data.append([
+                entry["sale_game_name"],
+                entry["sale_discount_price"],
+                entry["sale_discount_percent"],
+                entry["sale_scraped_at"],
+                ", ".join(entry["sale_extra_info"]),
+                entry["sale_rating"],
+                entry["sale_release_date"],
+                entry["sale_ends_in"],
+                entry["sale_started_ago"]
+            ])
 
-    try:
-        # Configuração de valores para o Google Sheets
-        body = {"values": values}
-        sheet = service.spreadsheets()
-        result = sheet.values().update(
-            spreadsheetId=spreadsheet_id,
-            range=range_name,
-            valueInputOption="RAW",
-            body=body
-        ).execute()
-        logger.info(f"{result.get('updatedCells')} células atualizadas no Google Sheets.")
-    except Exception as e:
-        logger.error(f"Erro ao exportar dados para o Google Sheets: {e}")
+    # Se houver novos dados, exporta para o Google Sheets
+    if new_data:
+        body = {"values": new_data}
+        try:
+            result = sheet.values().update(
+                spreadsheetId=spreadsheet_id,
+                range=range_name,
+                valueInputOption="RAW",
+                body=body
+            ).execute()
+            logger.info(f"{result.get('updatedCells')} células atualizadas no Google Sheets.")
+        except Exception as e:
+            logger.error(f"Erro ao exportar dados para o Google Sheets: {e}")
+    else:
+        logger.info("Nenhum dado novo para exportar para o Google Sheets.")
